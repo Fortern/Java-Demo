@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <title>计算要塞位置</title>
+</head>
+<body>
+<label>
+    x1:&nbsp;&nbsp;<input type="text" id="x1"><br>
+</label>
+<label>
+    z1:&nbsp;&nbsp;<input type="text" id="z1"><br>
+</label>
+<label>
+    yaw1:&nbsp;<input type="text" id="yaw1"><br>
+</label>
+<label>
+    x2:&nbsp;&nbsp;<input type="text" id="x2"><br>
+</label>
+<label>
+    z2:&nbsp;&nbsp;<input type="text" id="z2"><br>
+</label>
+<label>
+    yaw2:&nbsp;<input type="text" id="yaw2"><br>
+</label>
+<button type="button" onclick="cal1()">计算</button>
+<br>
+<label>
+    <input type="text" id="result">
+</label>
+
+
+</body>
+<script>
+    function cal1() {
+        let result = cal(
+            document.getElementById("x1").value,
+            document.getElementById("yaw1").value,
+            document.getElementById("z1").value,
+            document.getElementById("x2").value,
+            document.getElementById("yaw2").value,
+            document.getElementById("z2").value
+        );
+        document.getElementById("result").value = result.x.toFixed(2) + ", " + result.z.toFixed(2);
+    }
+
+    function cal(x1, y1, z1, x2, y2, z2) {
+        z1 = -z1;
+        z2 = -z2;
+        y1 = -y1 - 90;
+        y1 = y1 * Math.PI / 180;
+        y2 = -y2 - 90;
+        y2 = y2 * Math.PI / 180;
+        const x = (x1 * Math.tan(y1) - x2 * Math.tan(y2) + z2 - z1) / (Math.tan(y1) - Math.tan(y2));
+        const z = Math.tan(y1) * (x - x1) + z1;
+        return {
+            x: x,
+            z: -z
+        };
+    }
+</script>
+
+</html>
