@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <properties resource="db.properties"/>
+    <!-- environments:配置不同数据库连接信息，可以分别用于不同的环境，比如开发、测试和生产环境 -->
+    <typeAliases>
+        <package name="xyz.fortern.pojo"/>
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <!-- 事务管理器 -->
+            <!-- 直接使用了 JDBC 的提交和回滚设施，它依赖从数据源获得的连接来管理事务作用域。-->
+            <!-- 如果设为 MANAGED 则是让 -->
+            <transactionManager type="JDBC"/>
+            <!-- 使用连接池，除了数据源信息，还可以配置其他连接池相关的属性 -->
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+        <environment id="test">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="${driver}"/>
+                <property name="url" value="${url}"/>
+                <property name="username" value="${username}"/>
+                <property name="password" value="${password}"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <!-- <package name="mapper"/> -->
+        <mapper resource="mapper/UserMapper.xml"/>
+        <mapper resource="mapper/BrandMapper.xml"/>
+    </mappers>
+</configuration>

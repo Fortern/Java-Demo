@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       https://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- 加载外部配置文件，需要引入context命名空间和约束路径 -->
+    <context:property-placeholder location="classpath:jdbc.properties" system-properties-mode="FALLBACK"/>
+    <!--
+         <context location="classpath:jdbc.properties">
+         少了一条属性system-properties-mode="FALLBACK"
+         系统默认为system-properties-mode="ENVIRONMENT"
+         意思就是从系统环境中去读取，把电脑名当做mysql的用户名
+         可能和spring底层org.springframework.beans.factory.config.PropertyPlaceholderConfigurer读取properties实现有关，默认从系统中读取真实用户名(username)。
+    -->
+    <!-- 配置路径扫描 -->
+    <context:component-scan base-package="xyz.fortern">
+        <!-- 不扫控制器，因为控制器交给SpringMVC -->
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <!-- 数据源 -->
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" >
+        <property name="driverClassName" value="${driver}"/>
+        <property name="url" value="${url}"/>
+        <property name="username" value="${username}"/>
+        <property name="password" value="${password}"/>
+    </bean>
+
+    <!-- 配置和MyBatis的整合 -->
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定MyBatis全局配置文件的位置-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!-- 数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!-- 指定mapper文件的位置 -->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+    </bean>
+    
+    <!-- 配置扫描器，将MyBatis接口的实现加入到IOC容器中 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 扫描所有dao接口的实现，加入到IOC容器 -->
+        <property name="basePackage" value="xyz.fortern.dao"/>
+    </bean>
+    
+    <!-- ============= 配置一个可以执行批量的sqlSession ============= -->
+    <bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <constructor-arg name="sqlSessionFactory" ref="sessionFactory"/>
+        <constructor-arg name="executorType" value="SIMPLE"/>
+    </bean>
+    
+    <!-- =============事务控制配置=============transactionManager -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    
+</beans>

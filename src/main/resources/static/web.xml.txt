@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+    <!-- 全局参数 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+    <!-- 监听器中调用全局参数，从而找到配置文件，并加载Spring容器 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    
+    <!-- 配置SpringMVC的前端控制器，拦截所有请求，通过DispatcherServlet分发给不同的Controller处理 -->
+    <servlet>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>classpath:dispatcherServlet-servlet.xml</param-value>
+        </init-param>
+        <!-- 配置访问优先级，不能等第一次访问才加载，应该应用已启动就加载 -->
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dispatcherServlet</servlet-name>
+        <!-- 会匹配到/login这样的路径型url，不会匹配到*.jsp这样的后缀型url -->
+        <!-- 覆盖了DefaultServlet，但没有覆盖JspServlet，这样jsp页面不走这个Servlet -->
+        <!-- 假如此处使用/*，那么jsp页面也会被拦截，导致jsp页面无法正常打开 -->
+        <url-pattern>/</url-pattern>
+    </servlet-mapping>
+    
+    <!-- 字符编码过滤器 放在所有过滤器之前-->
+    <filter>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+        <!-- 给该过滤器中的三个属性赋值，强制请求与响应的编码都是utf-8 -->
+        <init-param>
+            <param-name>encoding</param-name>
+            <param-value>utf-8</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceRequestEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+        <init-param>
+            <param-name>forceResponseEncoding</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>CharacterEncodingFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <!-- 使用Rest风格的URI 将普通页面的post请求转为指定的delete或者put请求 -->
+    <filter>
+        <filter-name>HiddenHttpMethodFilter</filter-name>
+        <filter-class>org.springframework.web.filter.HiddenHttpMethodFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>HiddenHttpMethodFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+</web-app>
