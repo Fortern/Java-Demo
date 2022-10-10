@@ -1,34 +1,36 @@
 package xyz.fortern.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-/**
- * 测试[001] 什么情况下会生成Session并将Session信息返回前端？
- * <p>
- * 结论：尝试向Session中存储数据的时候，会将Session的信息存进Cookie返回前端
- */
 @RestController
 @RequestMapping("/test")
 public class TestController {
+	/**
+	 * 在使用SpringSecurity时，哪些情况会生成Session？
+	 * <p>
+	 * - 仅启用SpringSession，不会自动创建Session<p>
+	 * - 开启SpringSecurity(无配置),401,会自动创建Session<p>
+	 * - 开启SpringSecurity(SecurityFilterChain),200,不会自动创建Session<p>
+	 * - 继续配置authorizeRequests，放行的接口200不生成Session，拦截的接口403生成Session<p>
+	 * - 将sessionCreationPolicy设为NEVER，依旧会生成Session<p>
+	 * - 禁用requestCache后，访问需要身份认证的接口，不再产生Session
+	 */
 	@RequestMapping("/str")
-	public ResponseEntity<String> test(HttpServletRequest request, @CookieValue("SESSION") String sessionStr) {
-		HttpSession session = request.getSession();
-		Integer userId = (Integer) session.getAttribute("user");
-		System.out.println(sessionStr);
-		return ResponseEntity.ok((userId == null ? "未登录" : "ok") + "\n" + session.getId());
+	public ResponseEntity<String> sessionTest(HttpServletRequest request) {
+		boolean create = Boolean.parseBoolean(request.getParameter("create"));
+		HttpSession session = request.getSession(create);
+		System.out.println("session:" + (session == null ? null : session.getId()));
+		return ResponseEntity.ok(null);
+		
 	}
 	
-	@RequestMapping("login/{id}")
-	public ResponseEntity<String> login(HttpServletRequest request, @PathVariable int id) {
-		HttpSession session = request.getSession();
-		session.setAttribute("user", id);
-		return ResponseEntity.ok("登录成功");
+	@RequestMapping("/common")
+	public ResponseEntity<String> login(HttpServletRequest request) {
+		return ResponseEntity.ok("ok");
 	}
 }
