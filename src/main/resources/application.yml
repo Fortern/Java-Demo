@@ -7,3 +7,14 @@ spring:
     port: 6379
     database: 0
     password: Redis20868354
+
+pay:
+  ali:
+    app-id: 2016***
+    merchant-private-key: MIIEvg*****
+    alipay-public-key: MIIBIj*****
+    notify-url: http://localhost:8080/Alipay/notify_url.do
+    return-url: http://localhost:8080/Alipay/alipay_return.do
+    sign-type: RSA2
+    charset: UTF-8
+    gateway-url: https://openapi.alipaydev.com/gateway.do
