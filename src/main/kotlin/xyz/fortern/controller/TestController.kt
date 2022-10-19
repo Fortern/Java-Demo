@@ -9,6 +9,15 @@ import javax.servlet.http.HttpServletRequest
 @RestController
 @RequestMapping("/test")
 class TestController {
+    
+    /**
+     * 继承一个类，并创建单例
+     */
+    val cache: Map<String, Any?> = object : LinkedHashMap<String, Any?>(6, 1.0f, true) {
+        //元素超过5个，就删除最早的一个
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Any?>) = size > 5
+    }
+    
     @GetMapping("/str")
     fun sessionTest(request: HttpServletRequest): ResponseEntity<String> {
         /**
