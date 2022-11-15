@@ -11,7 +11,6 @@ import org.springframework.security.web.SecurityFilterChain
 @EnableWebSecurity
 open class SecurityConfig {
 	@Bean
-	@Throws(Exception::class)
 	open fun filterChain(http: HttpSecurity): SecurityFilterChain {
 		http.csrf().disable()
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
