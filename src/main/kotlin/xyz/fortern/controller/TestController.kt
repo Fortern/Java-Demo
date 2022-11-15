@@ -1,25 +1,23 @@
 package xyz.fortern.controller
 
-import org.springframework.beans.factory.annotation.Autowired
+import com.alibaba.fastjson.JSON
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import javax.servlet.http.HttpServletRequest
 
 @RestController
 @RequestMapping("/test")
 class TestController(
-	@Autowired
-	var redisTemplate: RedisTemplate<String, Any?>,
+	private val redisTemplate: RedisTemplate<String, Any>,
 ) {
-	
+	private val valueOperations = redisTemplate.opsForValue()
+	private val hashOperations = redisTemplate.opsForHash<String, Any>()
 	
 	/**
 	 * 继承一个类，并创建单例
 	 */
-	val cache: Map<String, Any?> = object : LinkedHashMap<String, Any?>(6, 1.0f, true) {
+	private val cache: Map<String, Any?> = object : LinkedHashMap<String, Any?>(6, 1.0f, true) {
 		//元素超过5个，就删除最早的一个
 		override fun removeEldestEntry(eldest: MutableMap.MutableEntry<String, Any?>) = size > 5
 	}
@@ -47,4 +45,33 @@ class TestController(
 		return ResponseEntity.ok("ok")
 	}
 	
+	@PostMapping("/redis/set/{op}")
+	fun redisSet(
+		@PathVariable op: String,
+		key: String,
+		value: String,
+		@RequestParam(required = false) field: String?,
+	): ResponseEntity<String>? {
+		if (op == "hash")
+			field?.let { hashOperations.put(key, it, value) }
+		else
+			valueOperations.set(key, value)
+		return ResponseEntity.ok("ok")
+	}
+	
+	@GetMapping("/redis/get/{op}")
+	fun redisGet(
+		@PathVariable op: String,
+		key: String,
+		@RequestParam(required = false) field: String?,
+	): ResponseEntity<String>? {
+		val result: String = (if (op == "hash")
+			if (field == null)
+				JSON.toJSONString(hashOperations.entries(key))
+			else
+				(hashOperations.get(key, field) as String)
+		else
+			valueOperations.get(key)) as String
+		return ResponseEntity.ok(result)
+	}
 }

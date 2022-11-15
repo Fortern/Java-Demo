@@ -3,7 +3,6 @@ package xyz.fortern.controller
 import com.alipay.api.AlipayApiException
 import com.alipay.api.DefaultAlipayClient
 import com.alipay.api.request.AlipayTradePagePayRequest
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import xyz.fortern.config.AlipayProperties
@@ -18,8 +17,7 @@ import javax.servlet.http.HttpServletResponse
 @Controller
 @RequestMapping("/alipay")
 class AlipayController(
-	@Autowired
-	val alipayProperties: AlipayProperties,
+	private val alipayProperties: AlipayProperties,
 ) {
 	/**
 	 * 生成订单直接跳转支付宝付款
