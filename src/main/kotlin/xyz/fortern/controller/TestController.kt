@@ -74,4 +74,14 @@ class TestController(
 			valueOperations.get(key)) as String
 		return ResponseEntity.ok(result)
 	}
+	
+	@GetMapping("/redis/delete")
+	fun redisDelete(key: String): ResponseEntity<String> {
+		val delete = redisTemplate.delete(key)
+		return if (delete == true) {
+			ResponseEntity.ok("ok")
+		} else {
+			ResponseEntity.ok("no")
+		}
+	}
 }
