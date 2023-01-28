@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
+        <version>2.7.8</version>
     </parent>
     <groupId>xyz.fortern</groupId>
     <artifactId>java-test</artifactId>
@@ -14,8 +14,8 @@
     <description>springboot-demo</description>
     <properties>
         <java.version>17</java.version>
-        <kotlin.version>1.7.21</kotlin.version>
-        <fastjson2.version>2.0.19</fastjson2.version>
+        <kotlin.version>1.8.0</kotlin.version>
+        <fastjson2.version>2.0.23</fastjson2.version>
     </properties>
     <dependencies>
         <dependency>
@@ -72,10 +72,10 @@
             <artifactId>fastjson2</artifactId>
             <version>${fastjson2.version}</version>
         </dependency>
-        <!-- FastJson2 Extension https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2-extension -->
+        <!-- FastJson2 Extension Spring5 https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2-extension -->
         <dependency>
             <groupId>com.alibaba.fastjson2</groupId>
-            <artifactId>fastjson2-extension</artifactId>
+            <artifactId>fastjson2-extension-spring5</artifactId>
             <version>${fastjson2.version}</version>
         </dependency>
         <!-- FastJson2 Kotlin https://mvnrepository.com/artifact/com.alibaba.fastjson2/fastjson2-kotlin -->
@@ -88,12 +88,12 @@
         <dependency>
             <groupId>com.alipay.sdk</groupId>
             <artifactId>alipay-sdk-java</artifactId>
-            <version>4.34.47.ALL</version>
+            <version>4.35.37.ALL</version>
         </dependency>
         <!-- Kotlin Stdlib Jdk8 https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-stdlib-jdk8 -->
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
-            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <artifactId>kotlin-stdlib</artifactId>
             <version>${kotlin.version}</version>
         </dependency>
         <!-- Kotlin Reflect https://mvnrepository.com/artifact/org.jetbrains.kotlin/kotlin-reflect -->
