@@ -1,9 +1,11 @@
 package xyz.fortern.controller
 
 import com.alibaba.fastjson.JSON
+import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import xyz.fortern.pojo.User
 import javax.servlet.http.HttpServletRequest
 
 @RestController
@@ -13,6 +15,8 @@ class TestController(
 ) {
 	private val valueOperations = redisTemplate.opsForValue()
 	private val hashOperations = redisTemplate.opsForHash<String, Any>()
+	
+	private val logger = LoggerFactory.getLogger(this.javaClass);
 	
 	/**
 	 * 继承一个类，并创建单例
@@ -84,4 +88,23 @@ class TestController(
 			ResponseEntity.ok("no")
 		}
 	}
+	
+	/**
+	 * 读取多个参数，SpringBoot自动封装为对象。逗号视为数组元素分隔符。
+	 */
+	@PostMapping("/readuser")
+	fun readUser(user: User): ResponseEntity<User> {
+		return ResponseEntity.ok(user)
+	}
+	
+	/**
+	 * 测试SessionId
+	 */
+	@PostMapping("/session")
+	fun sessionTest2(request: HttpServletRequest): ResponseEntity<String> {
+		val session = request.session
+		logger.info("sessionId: ${session.id}")
+		return ResponseEntity.ok("")
+	}
+	
 }
