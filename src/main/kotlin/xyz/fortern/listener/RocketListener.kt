@@ -9,7 +9,7 @@ const val groupName = "kotlin-consumer"
 
 @Component
 @RocketMQMessageListener(topic = "map-topic", consumerGroup = groupName)
-class RocketListener: RocketMQListener<Map<String, String>> {
+class RocketListener : RocketMQListener<Map<String, String>> {
 	private val logger = LoggerFactory.getLogger(this::class.java)
 	
 	override fun onMessage(message: Map<String, String>) {

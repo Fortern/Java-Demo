@@ -31,14 +31,14 @@ open class RocketController(
 	open fun push2(@RequestBody params: Map<String, String>): ResponseEntity<String> {
 		logger.info("向主题\"map-topic\"发送带有标签的消息")
 		rocketMQTemplate.convertAndSend("map-topic:kotlin-tag", params)
-		return  ResponseEntity.ok("ok")
+		return ResponseEntity.ok("ok")
 	}
 	
 	@PostMapping("/async")
 	open fun push3(@RequestBody params: Map<String, String>): ResponseEntity<String> {
 		logger.info("向主题发送异步消息并执行回调")
-		rocketMQTemplate.asyncSend("map-topic", params, object: SendCallback{
-			override fun onSuccess(sendResult: SendResult) = println("消息发送成功：$sendResult")
+		rocketMQTemplate.asyncSend("map-topic", params, object : SendCallback {
+			override fun onSuccess(sendResult: SendResult) = logger.info("消息发送成功：$sendResult")
 			override fun onException(e: Throwable) = logger.error("消息发送失败", e)
 		})
 		return ResponseEntity.ok("ok")

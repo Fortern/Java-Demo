@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component
 import xyz.fortern.pojo.User
 
 @Component
-class CustomAuthProvider: AuthenticationProvider {
+class CustomAuthProvider : AuthenticationProvider {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 	
 	private val userMap = mapOf(

@@ -28,7 +28,7 @@ class TestController(
 	
 	@GetMapping("/str")
 	fun sessionTest(request: HttpServletRequest): ResponseEntity<String> {
-		/**
+		/*
 		 * 在使用SpringSecurity时，哪些情况会生成Session？
 		 *
 		 * - 仅启用SpringSession，不会自动创建Session

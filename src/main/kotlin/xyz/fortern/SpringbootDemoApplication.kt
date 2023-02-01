@@ -14,4 +14,3 @@ open class SpringbootDemoApplication
 fun main(args: Array<String>) {
 	runApplication<SpringbootDemoApplication>(*args)
 }
-
