@@ -5,7 +5,7 @@ import org.springframework.boot.context.properties.ConstructorBinding
 
 @ConstructorBinding
 @ConfigurationProperties(prefix = "pay.ali")
-data class AlipayProperties(
+data class AlipayProperties constructor(
 	/*
 	  一个大坑，默认情况下，下面的每个属性都会被当做Bean进行注入
 	  然而并不存在String类型的Bean，导致报错

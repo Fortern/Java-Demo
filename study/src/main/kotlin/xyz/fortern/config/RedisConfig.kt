@@ -7,16 +7,18 @@ import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.serializer.StringRedisSerializer
 
-
+/**
+ * Redis配置类
+ */
 @Configuration
 open class RedisConfig {
 	@Bean
-	open fun redisTemplate(redisConnectionFactory: RedisConnectionFactory): RedisTemplate<String, Any>? {
+	open fun redisTemplate(redisConnectionFactory: RedisConnectionFactory): RedisTemplate<String, Any> {
 		//Redis模板对象
 		val template = RedisTemplate<String, Any>()
 		
 		//设置连接工厂
-		template.connectionFactory = redisConnectionFactory
+		template.setConnectionFactory(redisConnectionFactory)
 		
 		//设置自定义序列化方式
 		//key：字符串类型，使用String的序列化方式

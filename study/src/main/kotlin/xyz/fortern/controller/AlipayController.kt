@@ -6,8 +6,8 @@ import com.alipay.api.request.AlipayTradePagePayRequest
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import xyz.fortern.config.AlipayProperties
-import java.text.SimpleDateFormat
-import java.util.*
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -19,6 +19,7 @@ import javax.servlet.http.HttpServletResponse
 class AlipayController(
 	private val alipayProperties: AlipayProperties,
 ) {
+	private val formatter: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
 	/**
 	 * 生成订单直接跳转支付宝付款
 	 */
@@ -35,7 +36,7 @@ class AlipayController(
 		val inPhone = request.getParameter("in_phone")
 		// 创建唯一订单号
 		val random = (Math.random() * 10000).toInt()
-		val dateStr = SimpleDateFormat("yyyyMMddHHmmss").format(Date())
+		val dateStr = LocalDateTime.now().format(formatter)
 		
 		// 订单号拼接规则：手机号后四位+当前时间后四位+随机数四位数
 		val outTradeNo = inPhone.substring(7) + dateStr.substring(10) + random
@@ -48,13 +49,14 @@ class AlipayController(
 		
 		// 设置请求参数
 		val alipayRequest = AlipayTradePagePayRequest()
-		alipayRequest.returnUrl = alipayProperties.returnUrl //支付成功响应后跳转地址
-		alipayRequest.notifyUrl = alipayProperties.notifyUrl //异步请求地址
+		//支付成功响应后跳转地址
+		alipayRequest.returnUrl = alipayProperties.returnUrl
+		//异步请求地址
+		alipayRequest.notifyUrl = alipayProperties.notifyUrl
 		
 		alipayRequest.bizContent = "{\"out_trade_no\":\"$outTradeNo\"," +
 				"\"total_amount\":\"$totalAmount\",\"subject\":\"$subject\"," +
 				"\"body\":\"\",\"product_code\":\"FAST_INSTANT_TRADE_PAY\"}"
-		
 		
 		// 请求
 		try {
