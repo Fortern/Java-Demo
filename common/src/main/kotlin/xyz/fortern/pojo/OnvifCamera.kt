@@ -1,6 +1,8 @@
 package xyz.fortern.pojo
 
-data class OnvifCamera (
+import java.io.Serializable
+
+data class OnvifCamera(
 	/**
 	 * id
 	 */
@@ -22,4 +24,4 @@ data class OnvifCamera (
 	 */
 	var password: String?,
 	
-)
+	) : Serializable

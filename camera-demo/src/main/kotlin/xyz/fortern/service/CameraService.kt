@@ -3,6 +3,7 @@ package xyz.fortern.service
 import be.teletask.onvif.OnvifManager
 import be.teletask.onvif.listeners.OnvifResponseListener
 import be.teletask.onvif.models.OnvifDevice
+import be.teletask.onvif.models.OnvifDeviceInformation
 import be.teletask.onvif.models.OnvifMediaProfile
 import be.teletask.onvif.responses.OnvifResponse
 import org.slf4j.Logger
@@ -20,7 +21,7 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 @Service
-class CameraControlService(
+class CameraService(
 	private val cameraMapper: CameraMapper,
 ) {
 	private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
@@ -43,7 +44,7 @@ class CameraControlService(
 	 *
 	 * @param id 摄像头的ID
 	 */
-	@Cacheable(value = ["camera"],key = "#id")
+	@Cacheable(value = ["camera"], key = "#id")
 	fun getCameraById(id: Int): OnvifCamera? {
 		return cameraMapper.getById(id)
 	}
@@ -80,10 +81,36 @@ class CameraControlService(
 	 *
 	 * @param device Onvif设备
 	 */
-	fun getInfo(device: OnvifDevice) {
-		onvifManager.getDeviceInformation(device) { _, deviceInformation ->
-			logger.info("getDeviceInfo: {}", deviceInformation.toString())
+	fun getInfo(camera: OnvifCamera): OnvifDeviceInformation {
+		var info: OnvifDeviceInformation? = null
+		val stopWatch = StopWatch("测试")
+		stopWatch.start("测试1")
+		val mLock: Lock = ReentrantLock()
+		val condition = mLock.newCondition()
+		onvifManager.getDeviceInformation(
+			OnvifDevice(
+				camera.ip + ":" + camera.port,
+				camera.username,
+				camera.password
+			)
+		) { _, deviceInformation ->
+			info = deviceInformation
+			mLock.lock()
+			condition.signal()
+			mLock.unlock()
 		}
+		mLock.lock()
+		condition.await(8, TimeUnit.SECONDS)
+		mLock.unlock()
+		
+		if (info === null) {
+			throw OnvifResponseTimeoutException()
+		}
+		
+		logger.info("onvifDeviceInformation: {}", info)
+		stopWatch.stop()
+		logger.info("方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
+		return info as OnvifDeviceInformation
 	}
 	
 	/**
@@ -93,14 +120,20 @@ class CameraControlService(
 	 * @throws OnvifResponseTimeoutException 请求Onvif设备信息超时
 	 */
 	@NonNull
-	@Cacheable(value = ["profiles"],key = "#camera.id")
-	fun getMediaProfiles(camera: OnvifCamera): List<OnvifMediaProfile>  {
+	@Cacheable(value = ["profiles"], key = "#camera.id")
+	fun getMediaProfiles(camera: OnvifCamera): List<OnvifMediaProfile> {
 		var mediaProfiles: List<OnvifMediaProfile>? = null
 		val stopWatch = StopWatch("测试")
 		stopWatch.start("测试1")
 		val mLock: Lock = ReentrantLock()
 		val condition = mLock.newCondition()
-		onvifManager.getMediaProfiles(OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password)) { _, mediaProfilesReceived ->
+		onvifManager.getMediaProfiles(
+			OnvifDevice(
+				camera.ip + ":" + camera.port,
+				camera.username,
+				camera.password
+			)
+		) { _, mediaProfilesReceived ->
 			mediaProfiles = mediaProfilesReceived
 			mLock.lock()
 			condition.signal()
@@ -122,7 +155,13 @@ class CameraControlService(
 	fun ptzAbsoluteMove(camera: OnvifCamera, p: Double, t: Double, z: Double) {
 		val mediaProfiles = getMediaProfiles(camera)
 		
-		onvifManager.absoluteMove(OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password), mediaProfiles[0], p, t, z)
+		onvifManager.absoluteMove(
+			OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password),
+			mediaProfiles[0],
+			p,
+			t,
+			z
+		)
 		
 	}
 }
