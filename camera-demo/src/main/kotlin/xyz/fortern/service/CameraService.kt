@@ -10,6 +10,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CacheEvict
+import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
@@ -66,7 +67,7 @@ class CameraService(
 	 *
 	 * @param camera 摄像头详情
 	 */
-	@CacheEvict(key = "#camera.id")
+	@CachePut(key = "#camera.id")
 	fun updateCamera(camera: OnvifCamera) {
 		cameraMapper.updateById(camera)
 	}
@@ -81,9 +82,10 @@ class CameraService(
 	/**
 	 * 获取设备信息
 	 *
-	 * @param device Onvif设备
+	 * @param camera 摄像头信息
 	 */
-	fun getInfo(camera: OnvifCamera): OnvifDeviceInformation {
+	@Cacheable(cacheNames = ["onvifInfo"], key = "#camera.id")
+	fun getOnvifInfo(camera: OnvifCamera): OnvifDeviceInformation {
 		var info: OnvifDeviceInformation? = null
 		val stopWatch = StopWatch("测试")
 		stopWatch.start("测试1")
@@ -111,7 +113,7 @@ class CameraService(
 		
 		logger.info("onvifDeviceInformation: {}", info)
 		stopWatch.stop()
-		logger.info("方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
+		logger.info("getInfo方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
 		return info as OnvifDeviceInformation
 	}
 	
@@ -122,11 +124,11 @@ class CameraService(
 	 * @throws OnvifResponseTimeoutException 请求Onvif设备信息超时
 	 */
 	@NonNull
-	@Cacheable(value = ["profiles"], key = "#camera.id")
-	fun getMediaProfiles(camera: OnvifCamera): List<OnvifMediaProfile> {
+	@Cacheable(value = ["onvifProfiles"], key = "#camera.id")
+	fun getOnvifMediaProfiles(camera: OnvifCamera): List<OnvifMediaProfile> {
 		var mediaProfiles: List<OnvifMediaProfile>? = null
-		val stopWatch = StopWatch("测试")
-		stopWatch.start("测试1")
+		val stopWatch = StopWatch()
+		stopWatch.start()
 		val mLock: Lock = ReentrantLock()
 		val condition = mLock.newCondition()
 		onvifManager.getMediaProfiles(
@@ -150,12 +152,12 @@ class CameraService(
 		}
 		logger.info("mediaProfiles: {}", mediaProfiles)
 		stopWatch.stop()
-		logger.info("方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
+		logger.info("getMediaProfiles方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
 		return mediaProfiles as List<OnvifMediaProfile>
 	}
 	
 	fun ptzAbsoluteMove(camera: OnvifCamera, p: Double, t: Double, z: Double) {
-		val mediaProfiles = getMediaProfiles(camera)
+		val mediaProfiles = getOnvifMediaProfiles(camera)
 		
 		onvifManager.absoluteMove(
 			OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password),

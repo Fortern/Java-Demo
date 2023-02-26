@@ -10,7 +10,6 @@ import org.springframework.data.redis.cache.RedisCacheManager
 import org.springframework.data.redis.connection.RedisConnectionFactory
 import org.springframework.data.redis.serializer.RedisSerializationContext
 import org.springframework.data.redis.serializer.StringRedisSerializer
-import xyz.fortern.constant.CAMERA_CACHE
 import java.time.Duration
 
 @EnableCaching//打开SpringBoot的Cache自动装配
@@ -35,16 +34,16 @@ class CacheConfig {
 			.entryTtl(Duration.ofHours(3))
 		
 		// 特殊缓存空间应用不同配置
-		val map: MutableMap<String, RedisCacheConfiguration> = HashMap(2)
+		//val map: MutableMap<String, RedisCacheConfiguration> = HashMap(2)
 		// a-camera 缓存60分钟
-		map[CAMERA_CACHE] = config.entryTtl(Duration.ofHours(1))
+		//map[CAMERA_CACHE] = config.entryTtl(Duration.ofHours(1))
 		
 		// 使用自定义的缓存配置初始化一个
 		return RedisCacheManager.builder(connectionFactory)
 			// 默认配置
 			.cacheDefaults(config)
 			// 特殊缓存配置
-			.withInitialCacheConfigurations(map)
+			//.withInitialCacheConfigurations(map)
 			// 事务
 			.transactionAware()
 			.build()

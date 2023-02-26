@@ -53,14 +53,14 @@ class CameraController(
 	@PostMapping("/getInfo/{id}")
 	fun cameraInfo(@PathVariable id: Int): ResponseEntity<*> {
 		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found.")
-		val info = cameraService.getInfo(camera)
+		val info = cameraService.getOnvifInfo(camera)
 		return ResponseEntity.ok(info)
 	}
 	
 	@PostMapping("/profile/{id}")
 	fun cameraProfile(@PathVariable id: Int): ResponseEntity<*> {
 		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found")
-		val mediaProfiles = cameraService.getMediaProfiles(camera)
+		val mediaProfiles = cameraService.getOnvifMediaProfiles(camera)
 		return ResponseEntity.ok(mediaProfiles)
 	}
 	
