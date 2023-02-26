@@ -41,22 +41,31 @@ class CameraController(
 		return ResponseEntity.ok("ok")
 	}
 	
-	@PostMapping("/getInfo")
-	fun cameraInfo(id: Int): ResponseEntity<String> {
+	/**
+	 * 获取摄像头详情
+	 */
+	@PostMapping("/get/{id}")
+	fun getCamera(@PathVariable id: Int): ResponseEntity<*> {
 		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found.")
-		cameraService.getInfo(camera)
-		return ResponseEntity.ok(null)
+		return ResponseEntity.ok(camera)
 	}
 	
-	@PostMapping("/profile")
-	fun cameraProfile(id: Int): ResponseEntity<*> {
+	@PostMapping("/getInfo/{id}")
+	fun cameraInfo(@PathVariable id: Int): ResponseEntity<*> {
+		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found.")
+		val info = cameraService.getInfo(camera)
+		return ResponseEntity.ok(info)
+	}
+	
+	@PostMapping("/profile/{id}")
+	fun cameraProfile(@PathVariable id: Int): ResponseEntity<*> {
 		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found")
 		val mediaProfiles = cameraService.getMediaProfiles(camera)
 		return ResponseEntity.ok(mediaProfiles)
 	}
 	
-	@PostMapping("/ptz")
-	fun cameraPtzControl(id: Int, p: Double, t: Double, z: Double): ResponseEntity<String> {
+	@PostMapping("/ptz/{id}")
+	fun cameraPtzControl(@PathVariable id: Int, p: Double, t: Double, z: Double): ResponseEntity<String> {
 		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found")
 		cameraService.ptzAbsoluteMove(camera, p, t, z)
 		return ResponseEntity.ok(null)

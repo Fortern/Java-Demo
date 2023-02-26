@@ -1,10 +1,4 @@
 spring:
-  cache:
-    type: redis
-    redis:
-      time-to-live: 86400000
-      # 是否缓存空值
-      cache-null-values: true
   redis:
     password: Redis20868354
   datasource:

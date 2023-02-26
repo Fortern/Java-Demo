@@ -16,7 +16,7 @@ class TestController(
 	private val valueOperations = redisTemplate.opsForValue()
 	private val hashOperations = redisTemplate.opsForHash<String, Any>()
 	
-	private val logger = LoggerFactory.getLogger(this.javaClass);
+	private val logger = LoggerFactory.getLogger(this.javaClass)
 	
 	/**
 	 * 继承一个类，并创建单例

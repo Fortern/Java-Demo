@@ -8,6 +8,7 @@ import be.teletask.onvif.models.OnvifMediaProfile
 import be.teletask.onvif.responses.OnvifResponse
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.cache.annotation.CacheConfig
 import org.springframework.cache.annotation.CacheEvict
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.lang.NonNull
@@ -21,6 +22,7 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 @Service
+@CacheConfig(cacheNames = ["camera"])
 class CameraService(
 	private val cameraMapper: CameraMapper,
 ) {
@@ -44,7 +46,7 @@ class CameraService(
 	 *
 	 * @param id 摄像头的ID
 	 */
-	@Cacheable(value = ["camera"], key = "#id")
+	@Cacheable(key = "#id")
 	fun getCameraById(id: Int): OnvifCamera? {
 		return cameraMapper.getById(id)
 	}
@@ -54,7 +56,7 @@ class CameraService(
 	 *
 	 * @param id 摄像头的ID
 	 */
-	@CacheEvict(value = ["camera"], key = "#id")
+	@CacheEvict(key = "#id")
 	fun deleteById(id: Int) {
 		cameraMapper.deleteById(id)
 	}
@@ -64,7 +66,7 @@ class CameraService(
 	 *
 	 * @param camera 摄像头详情
 	 */
-	@CacheEvict(value = ["camera"], key = "#camera.id")
+	@CacheEvict(key = "#camera.id")
 	fun updateCamera(camera: OnvifCamera) {
 		cameraMapper.updateById(camera)
 	}

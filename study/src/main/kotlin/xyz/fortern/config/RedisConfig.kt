@@ -1,6 +1,6 @@
 package xyz.fortern.config
 
-import com.alibaba.fastjson2.support.spring.data.redis.FastJsonRedisSerializer
+import com.alibaba.fastjson2.support.spring.data.redis.GenericFastJsonRedisSerializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.RedisConnectionFactory
@@ -25,7 +25,7 @@ open class RedisConfig {
 		val stringRedisSerializer = StringRedisSerializer()
 		
 		//value：Object类型，使用fastjson的序列化方式,直接序列化对象
-		val fastJsonRedisSerializer = FastJsonRedisSerializer(Any::class.java)
+		val fastJsonRedisSerializer = GenericFastJsonRedisSerializer()
 		
 		//指定序列化和反序列化方式
 		template.keySerializer = stringRedisSerializer
