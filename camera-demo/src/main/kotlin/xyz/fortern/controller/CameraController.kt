@@ -46,8 +46,11 @@ class CameraController(
 	 */
 	@PostMapping("/get/{id}")
 	fun getCamera(@PathVariable id: Int): ResponseEntity<*> {
-		val camera = cameraService.getCameraById(id) ?: return ResponseEntity.ok("camera not found.")
-		return ResponseEntity.ok(camera)
+		val camera = cameraService.getCameraById(id)
+		return if (camera == null) {
+			ResponseEntity.ok("camera not found.")
+		} else
+			ResponseEntity.ok(camera)
 	}
 	
 	@PostMapping("/getInfo/{id}")

@@ -24,7 +24,7 @@
         <java.version>17</java.version>
         <kotlin.version>1.8.10</kotlin.version>
         <fastjson2.version>2.0.24</fastjson2.version>
-        <boot.version>2.7.8</boot.version>
+        <boot.version>2.7.9</boot.version>
         <common.version>1.0.0</common.version>
     </properties>
     <dependencyManagement>
@@ -33,6 +33,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-security</artifactId>
+                <version>${boot.version}</version>
+            </dependency>
+            <!-- Spring Boot Starter AOP https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-aop</artifactId>
                 <version>${boot.version}</version>
             </dependency>
             <!-- Redis https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->

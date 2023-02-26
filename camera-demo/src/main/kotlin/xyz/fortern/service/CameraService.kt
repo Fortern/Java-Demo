@@ -14,7 +14,9 @@ import org.springframework.cache.annotation.CachePut
 import org.springframework.cache.annotation.Cacheable
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
-import org.springframework.util.StopWatch
+import xyz.fortern.constant.CAMERA_CACHE
+import xyz.fortern.constant.ONVIF_INFO_CACHE
+import xyz.fortern.constant.ONVIF_PROFILE_CACHE
 import xyz.fortern.exception.OnvifResponseTimeoutException
 import xyz.fortern.mapper.CameraMapper
 import xyz.fortern.pojo.OnvifCamera
@@ -23,7 +25,7 @@ import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
 
 @Service
-@CacheConfig(cacheNames = ["camera"])
+@CacheConfig(cacheNames = [CAMERA_CACHE])
 class CameraService(
 	private val cameraMapper: CameraMapper,
 ) {
@@ -48,9 +50,7 @@ class CameraService(
 	 * @param id 摄像头的ID
 	 */
 	@Cacheable(key = "#id")
-	fun getCameraById(id: Int): OnvifCamera? {
-		return cameraMapper.getById(id)
-	}
+	fun getCameraById(id: Int): OnvifCamera? = cameraMapper.getById(id)
 	
 	/**
 	 * 根据主键删除一条摄像头信息
@@ -75,6 +75,7 @@ class CameraService(
 	/**
 	 * 添加一个新摄像头信息
 	 */
+	@CachePut(key = "#camera.id")
 	fun addNewCamera(camera: OnvifCamera) {
 		cameraMapper.insert(camera)
 	}
@@ -84,11 +85,9 @@ class CameraService(
 	 *
 	 * @param camera 摄像头信息
 	 */
-	@Cacheable(cacheNames = ["onvifInfo"], key = "#camera.id")
+	@Cacheable(cacheNames = [ONVIF_INFO_CACHE], key = "#camera.id")
 	fun getOnvifInfo(camera: OnvifCamera): OnvifDeviceInformation {
 		var info: OnvifDeviceInformation? = null
-		val stopWatch = StopWatch("测试")
-		stopWatch.start("测试1")
 		val mLock: Lock = ReentrantLock()
 		val condition = mLock.newCondition()
 		onvifManager.getDeviceInformation(
@@ -110,10 +109,6 @@ class CameraService(
 		if (info === null) {
 			throw OnvifResponseTimeoutException()
 		}
-		
-		logger.info("onvifDeviceInformation: {}", info)
-		stopWatch.stop()
-		logger.info("getInfo方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
 		return info as OnvifDeviceInformation
 	}
 	
@@ -124,11 +119,9 @@ class CameraService(
 	 * @throws OnvifResponseTimeoutException 请求Onvif设备信息超时
 	 */
 	@NonNull
-	@Cacheable(value = ["onvifProfiles"], key = "#camera.id")
+	@Cacheable(value = [ONVIF_PROFILE_CACHE], key = "#camera.id")
 	fun getOnvifMediaProfiles(camera: OnvifCamera): List<OnvifMediaProfile> {
 		var mediaProfiles: List<OnvifMediaProfile>? = null
-		val stopWatch = StopWatch()
-		stopWatch.start()
 		val mLock: Lock = ReentrantLock()
 		val condition = mLock.newCondition()
 		onvifManager.getMediaProfiles(
@@ -150,9 +143,6 @@ class CameraService(
 		if (mediaProfiles === null) {
 			throw OnvifResponseTimeoutException()
 		}
-		logger.info("mediaProfiles: {}", mediaProfiles)
-		stopWatch.stop()
-		logger.info("getMediaProfiles方法执行时间：{}ms", stopWatch.lastTaskTimeMillis)
 		return mediaProfiles as List<OnvifMediaProfile>
 	}
 	
