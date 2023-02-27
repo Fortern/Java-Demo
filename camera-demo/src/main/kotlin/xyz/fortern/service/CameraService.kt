@@ -20,6 +20,8 @@ import xyz.fortern.constant.ONVIF_PROFILE_CACHE
 import xyz.fortern.exception.OnvifResponseTimeoutException
 import xyz.fortern.mapper.CameraMapper
 import xyz.fortern.pojo.OnvifCamera
+import xyz.fortern.util.aSignal
+import xyz.fortern.util.aWait
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.Lock
 import java.util.concurrent.locks.ReentrantLock
@@ -98,13 +100,9 @@ class CameraService(
 			)
 		) { _, deviceInformation ->
 			info = deviceInformation
-			mLock.lock()
-			condition.signal()
-			mLock.unlock()
+			mLock.aSignal(condition)
 		}
-		mLock.lock()
-		condition.await(8, TimeUnit.SECONDS)
-		mLock.unlock()
+		mLock.aWait(condition, 8, TimeUnit.SECONDS)
 		
 		if (info === null) {
 			throw OnvifResponseTimeoutException()
@@ -132,13 +130,9 @@ class CameraService(
 			)
 		) { _, mediaProfilesReceived ->
 			mediaProfiles = mediaProfilesReceived
-			mLock.lock()
-			condition.signal()
-			mLock.unlock()
+			mLock.aSignal(condition)
 		}
-		mLock.lock()
-		condition.await(8, TimeUnit.SECONDS)
-		mLock.unlock()
+		mLock.aWait(condition, 8, TimeUnit.SECONDS)
 		
 		if (mediaProfiles === null) {
 			throw OnvifResponseTimeoutException()
