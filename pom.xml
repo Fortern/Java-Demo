@@ -26,6 +26,8 @@
         <fastjson2.version>2.0.24</fastjson2.version>
         <boot.version>2.7.9</boot.version>
         <common.version>1.0.0</common.version>
+        <spring.cloud-version>2021.0.6</spring.cloud-version>
+        <nacos.verison>2021.1</nacos.verison>
     </properties>
     <dependencyManagement>
         <dependencies>
@@ -58,6 +60,32 @@
                 <groupId>org.apache.rocketmq</groupId>
                 <artifactId>rocketmq-spring-boot-starter</artifactId>
                 <version>2.2.2</version>
+            </dependency>
+            <!-- Spring Cloud Starter Bootstrap https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-starter-bootstrap</artifactId>
+                <version>4.0.1</version>
+            </dependency>
+            <!-- Spring Cloud Dependencies https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-dependencies -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring.cloud-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Spring Cloud Starter Alibaba Nacos Discovery https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-discovery -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+                <version>${nacos.verison}</version>
+            </dependency>
+            <!-- Spring Cloud Starter Alibaba Nacos Config https://mvnrepository.com/artifact/com.alibaba.cloud/spring-cloud-starter-alibaba-nacos-config -->
+            <dependency>
+                <groupId>com.alibaba.cloud</groupId>
+                <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+                <version>${nacos.verison}</version>
             </dependency>
             <!-- Lombok https://mvnrepository.com/artifact/org.projectlombok/lombok -->
             <dependency>
