@@ -1,2 +1,12 @@
 server:
   port: 8078
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: camera_route #唯一标识路由
+          uri: lb://camera-demo #调用的服务 必须依赖spring-cloud-starter-loadbalancer才能使用服务名调用
+          predicates: #断言
+            - Path=/camera/** #按照路径断言，将该路径路由到上面的地址
+          filters: #过滤器
+            - StripPrefix=1 #转发前去掉1层路径
