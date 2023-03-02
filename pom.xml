@@ -17,7 +17,9 @@
         <module>common</module>
         <module>study</module>
         <module>gateway</module>
-        <module>camera-demo</module>
+        <module>camera</module>
+        <module>camera-control</module>
+        <module>feign-api</module>
     </modules>
 
     <properties>

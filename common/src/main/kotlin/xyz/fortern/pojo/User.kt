@@ -1,8 +1,12 @@
 package xyz.fortern.pojo
 
+/**
+ * 用户信息实体类
+ */
 data class User(
-	val id: Int,
-	val name: String,
-	val password: String,
-	val permission: List<String>,
+	var id: Int,
+	var username: String,
+	var password: String,
+	var phone: String?,
+	var permissions: List<String>,
 )

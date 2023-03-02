@@ -24,7 +24,7 @@ class CustomAuthProvider : AuthenticationProvider {
 		val user = userMap[username]
 		user?.let {
 			if (user.password == password) {
-				val list = user.permission.map { SimpleGrantedAuthority(it) }
+				val list = user.permissions.map { SimpleGrantedAuthority(it) }
 				logger.info("登录成功")
 				return UsernamePasswordAuthenticationToken(user, null, list)
 			}

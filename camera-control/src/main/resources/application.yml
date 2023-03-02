@@ -1,0 +1,5 @@
+server:
+  port: 8082
+spring:
+  redis:
+    password: Redis20868354
