@@ -30,11 +30,17 @@ class ResponseAdvice : ResponseBodyAdvice<Any> {
 		body ?: return null
 		if (body !is SpringResponse) return body
 		
+		body.timestamp = Date()
 		if (body.error == null) {
 			val httpStatus = HttpStatus.resolve(body.status)
-			body.error = if (httpStatus != null) httpStatus.reasonPhrase else "Other error."
+			if (httpStatus == null) {
+				body.error = "Other error."
+				response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+			} else {
+				body.error = httpStatus.reasonPhrase
+				response.setStatusCode(httpStatus)
+			}
 		}
-		body.timestamp = Date()
 		
 		return body
 	}

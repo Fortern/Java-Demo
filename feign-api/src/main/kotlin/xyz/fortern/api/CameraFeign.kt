@@ -8,7 +8,7 @@ import xyz.fortern.pojo.OnvifCamera
 /**
  * 通用的Camera模块API接口
  */
-@FeignClient("camera")
+@FeignClient(name = "camera")
 interface CameraFeign {
 	
 	/**

@@ -30,11 +30,20 @@ class ResponseAdvice : ResponseBodyAdvice<Any> {
 		body ?: return null
 		if (body !is SpringResponse) return body
 		
+		//对于404的情况，不返回任何内容，这样feign会将其反序列化为null，而不是反序列化为一个各个属性为空的对象
+		if (body.status == 404) return null
+		
+		body.timestamp = Date()
 		if (body.error == null) {
 			val httpStatus = HttpStatus.resolve(body.status)
-			body.error = if (httpStatus != null) httpStatus.reasonPhrase else "Other error."
+			if (httpStatus == null) {
+				body.error = "Other error."
+				response.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+			} else {
+				body.error = httpStatus.reasonPhrase
+				response.setStatusCode(httpStatus)
+			}
 		}
-		body.timestamp = Date()
 		
 		return body
 	}

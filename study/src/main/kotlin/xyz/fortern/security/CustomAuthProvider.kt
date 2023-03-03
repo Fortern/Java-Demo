@@ -14,8 +14,8 @@ class CustomAuthProvider : AuthenticationProvider {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 	
 	private val userMap = mapOf(
-		Pair(0, User(0, "Fortern", "123456", listOf("common"))),
-		Pair(1, User(1, "Maxin", "123456", listOf("normal")))
+		Pair(0, User(0, "Fortern", "123456", null, listOf("common"))),
+		Pair(1, User(1, "Maxin", "123456", null, listOf("normal")))
 	)
 	
 	override fun authenticate(authentication: Authentication): Authentication? {
