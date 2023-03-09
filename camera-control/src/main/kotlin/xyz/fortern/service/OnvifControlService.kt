@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Lazy
 import org.springframework.http.HttpMethod
 import org.springframework.lang.NonNull
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import xyz.fortern.constant.ONVIF_INFO_CACHE
 import xyz.fortern.constant.ONVIF_PROFILE_CACHE
 import xyz.fortern.constant.ONVIF_SNAPSHOT_CACHE
@@ -24,16 +23,12 @@ import xyz.fortern.pojo.PtzInfo
 import xyz.fortern.util.*
 import java.io.InputStream
 import java.util.concurrent.TimeUnit
-import java.util.concurrent.locks.Lock
-import java.util.concurrent.locks.ReentrantLock
 
 /**
  * Onvif设备控制
  */
 @Service
-class OnvifControlService(
-	val restTemplate: RestTemplate,
-) {
+class OnvifControlService {
 	private val logger: Logger = LoggerFactory.getLogger(this.javaClass)
 	
 	@Lazy
@@ -61,8 +56,7 @@ class OnvifControlService(
 	@Cacheable(cacheNames = [ONVIF_INFO_CACHE], key = "#camera.id")
 	fun getOnvifInfo(@NonNull camera: OnvifCamera): OnvifDeviceInformation {
 		var info: OnvifDeviceInformation? = null
-		val mLock: Lock = ReentrantLock()
-		val condition = mLock.newCondition()
+		val lock = MyLock()
 		onvifManager.getDeviceInformation(
 			OnvifDevice(
 				camera.ip + ":" + camera.port,
@@ -71,9 +65,9 @@ class OnvifControlService(
 			)
 		) { _, deviceInformation ->
 			info = deviceInformation
-			mLock.aSignal(condition)
+			lock.aSignal()
 		}
-		mLock.aWait(condition, 8, TimeUnit.SECONDS)
+		lock.aWait(8, TimeUnit.SECONDS)
 		
 		if (info === null) {
 			throw OnvifResponseTimeoutException()
@@ -90,13 +84,12 @@ class OnvifControlService(
 	@Cacheable(value = [ONVIF_PROFILE_CACHE], key = "#camera.id")
 	fun getOnvifMediaProfiles(@NonNull camera: OnvifCamera): List<OnvifMediaProfile> {
 		var mediaProfiles: List<OnvifMediaProfile>? = null
-		val mLock: Lock = ReentrantLock()
-		val condition = mLock.newCondition()
+		val mLock = MyLock()
 		onvifManager.getMediaProfiles(camera.toDevice()) { _, mediaProfilesReceived ->
 			mediaProfiles = mediaProfilesReceived
-			mLock.aSignal(condition)
+			mLock.aSignal()
 		}
-		mLock.aWait(condition, 8, TimeUnit.SECONDS)
+		mLock.aWait(8, TimeUnit.SECONDS)
 		
 		if (mediaProfiles === null) {
 			throw OnvifResponseTimeoutException()
@@ -109,15 +102,14 @@ class OnvifControlService(
 	 */
 	fun getConfigurationList(@NonNull camera: OnvifCamera): List<OnvifConfiguration> {
 		var configurationList: List<OnvifConfiguration>? = null
-		val mLock: Lock = ReentrantLock()
-		val condition = mLock.newCondition()
+		val mLock = MyLock()
 		onvifManager.getConfigurations(
 			OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password)
 		) { _, configurations ->
 			configurationList = configurations
-			mLock.aSignal(condition)
+			mLock.aSignal()
 		}
-		mLock.aWait(condition, 8, TimeUnit.SECONDS)
+		mLock.aWait(8, TimeUnit.SECONDS)
 		if (configurationList == null) {
 			throw OnvifResponseTimeoutException()
 		}
@@ -129,15 +121,14 @@ class OnvifControlService(
 	 */
 	fun getService(@NonNull camera: OnvifCamera): OnvifServices {
 		var onvifServices: OnvifServices? = null
-		val mLock: Lock = ReentrantLock()
-		val condition = mLock.newCondition()
+		val mLock = MyLock()
 		onvifManager.getServices(
 			OnvifDevice(camera.ip + ":" + camera.port, camera.username, camera.password)
 		) { _, result ->
 			onvifServices = result
-			mLock.aSignal(condition)
+			mLock.aSignal()
 		}
-		mLock.aWait(condition, 8, TimeUnit.SECONDS)
+		mLock.aWait(8, TimeUnit.SECONDS)
 		if (onvifServices == null) {
 			throw OnvifResponseTimeoutException()
 		}
@@ -153,16 +144,15 @@ class OnvifControlService(
 	)
 	fun getSnapshotUri(@NonNull camera: OnvifCamera): String {
 		var uri: String? = null
-		val lock: Lock = ReentrantLock()
-		val condition = lock.newCondition()
+		val lock = MyLock()
 		onvifManager.getSnapshotURI(
 			camera.toDevice(),
 			onvifControlService.getOnvifMediaProfiles(camera)[0]
 		) { _, _, s ->
 			uri = s
-			lock.aSignal(condition)
+			lock.aSignal()
 		}
-		lock.aWait(condition, 8, TimeUnit.SECONDS)
+		lock.aWait(8, TimeUnit.SECONDS)
 		if (uri == null) {
 			throw OnvifResponseTimeoutException()
 		}
@@ -189,16 +179,15 @@ class OnvifControlService(
 	 */
 	fun getPresetList(@NonNull camera: OnvifCamera): List<Preset> {
 		var presetList: List<Preset>? = null
-		val lock: Lock = ReentrantLock()
-		val condition = lock.newCondition()
+		val lock = MyLock()
 		onvifManager.getPresets(
 			camera.toDevice(),
 			onvifControlService.getOnvifMediaProfiles(camera)[0]
 		) { _, _, presets ->
 			presetList = presets.map { it.toPreset(onvifControlService.getOnvifInfo(camera).manufacturer) }
-			lock.aSignal(condition)
+			lock.aSignal()
 		}
-		lock.aWait(condition, 8, TimeUnit.SECONDS)
+		lock.aWait(8, TimeUnit.SECONDS)
 		
 		if (presetList === null) {
 			throw OnvifResponseTimeoutException()
@@ -223,15 +212,14 @@ class OnvifControlService(
 	 */
 	fun getPtzInfo(@NonNull camera: OnvifCamera): PtzInfo {
 		var onvifStatus: OnvifStatus? = null
-		val lock: Lock = ReentrantLock()
-		val condition = lock.newCondition()
+		val lock = MyLock()
 		onvifManager.getStatus(
 			camera.toDevice(), onvifControlService.getOnvifMediaProfiles(camera)[0]
 		) { _, _, onvifStatus1 ->
 			onvifStatus = onvifStatus1
-			lock.aSignal(condition)
+			lock.aSignal()
 		}
-		lock.aWait(condition, 8, TimeUnit.SECONDS)
+		lock.aWait(8, TimeUnit.SECONDS)
 		if (onvifStatus == null) {
 			throw OnvifResponseTimeoutException()
 		}
