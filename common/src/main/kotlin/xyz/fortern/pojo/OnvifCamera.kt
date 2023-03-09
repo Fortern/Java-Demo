@@ -24,4 +24,10 @@ data class OnvifCamera(
 	 */
 	var password: String?,
 	
-	) : Serializable
+	) : Serializable {
+	
+	/**
+	 * 预置位列表
+	 */
+	var presetList: List<Preset>? = null
+}
