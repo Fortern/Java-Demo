@@ -81,4 +81,12 @@ class CameraOperateController(
 		return null
 	}
 	
+	@ResponseBody
+	@PostMapping("/live/{id}")
+	@Throws(IOException::class)
+	fun liveUri(@PathVariable id: Int, response: HttpServletResponse): Any? {
+		val camera = cameraFeign.getById(id) ?: return SpringResponse(HttpStatus.NOT_FOUND.value())
+		return onvifControlService.getVideoUri(camera)
+	}
+	
 }

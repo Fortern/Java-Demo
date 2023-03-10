@@ -22,6 +22,8 @@ import xyz.fortern.pojo.Preset
 import xyz.fortern.pojo.PtzInfo
 import xyz.fortern.util.*
 import java.io.InputStream
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 import java.util.concurrent.TimeUnit
 
 /**
@@ -69,7 +71,7 @@ class OnvifControlService {
 		}
 		lock.aWait(8, TimeUnit.SECONDS)
 		
-		if (info === null) {
+		if (info == null) {
 			throw OnvifResponseTimeoutException()
 		}
 		return info!!
@@ -91,7 +93,7 @@ class OnvifControlService {
 		}
 		mLock.aWait(8, TimeUnit.SECONDS)
 		
-		if (mediaProfiles === null) {
+		if (mediaProfiles == null) {
 			throw OnvifResponseTimeoutException()
 		}
 		return mediaProfiles!!
@@ -169,7 +171,36 @@ class OnvifControlService {
 			HttpMethod.GET,
 			UsernamePasswordCredentials(camera.username, camera.password)
 		)
-		
+	}
+	
+	/**
+	 * 获取原始的视频链接，并添加身份认证信息
+	 */
+	fun getVideoUri(@NonNull camera: OnvifCamera): String {
+		var uri: String? = null
+		val lock = MyLock()
+		onvifManager.getMediaStreamURI(
+			camera.toDevice(),
+			onvifControlService.getOnvifMediaProfiles(camera)[0],
+		) { _, _, streamUri ->
+			uri = streamUri
+			lock.aSignal()
+		}
+		lock.aWait(8, TimeUnit.SECONDS)
+		if (uri == null) {
+			throw OnvifResponseTimeoutException()
+		}
+		//视频链接附上认证信息
+		var i = uri!!.indexOf("://")
+		if (i == -1) {
+			throw IllegalArgumentException()
+		}
+		i += 3
+		uri = uri!!.substring(0, i) + URLEncoder.encode(
+			camera.username,
+			StandardCharsets.UTF_8
+		) + ":" + URLEncoder.encode(camera.password, StandardCharsets.UTF_8) + "@" + uri!!.substring(i)
+		return uri!!
 	}
 	
 	/**
@@ -189,7 +220,7 @@ class OnvifControlService {
 		}
 		lock.aWait(8, TimeUnit.SECONDS)
 		
-		if (presetList === null) {
+		if (presetList == null) {
 			throw OnvifResponseTimeoutException()
 		}
 		

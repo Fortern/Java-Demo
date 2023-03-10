@@ -18,7 +18,7 @@ fun OnvifPreset.toPreset(manufacturer: String): Preset {
 	val tilt: Float
 	val zoom: Float
 	if (manufacturer == "HIKVISION") {
-		pan = this.pan.toFloat()
+		pan = this.pan.toFloat() * 180 + 180
 		tilt = this.tilt.toFloat() * 90
 		zoom = (this.zoom.toFloat() + 1) * 10
 	} else {
