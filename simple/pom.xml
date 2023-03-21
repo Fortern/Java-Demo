@@ -8,10 +8,10 @@
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <artifactId>camera</artifactId>
+    <artifactId>simple</artifactId>
     <version>1.0.0</version>
-    <name>camera</name>
-    <description>对摄像头的数据库操作</description>
+    <name>simple</name>
+    <description>一些简单数据的接口</description>
     <properties>
         <java.version>17</java.version>
     </properties>
@@ -20,12 +20,6 @@
         <dependency>
             <groupId>xyz.fortern</groupId>
             <artifactId>common</artifactId>
-            <version>1.0.0</version>
-        </dependency>
-        <!-- Feign API -->
-        <dependency>
-            <groupId>xyz.fortern</groupId>
-            <artifactId>feign-api</artifactId>
             <version>1.0.0</version>
         </dependency>
         <!-- Spring Boot Starter Web https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web -->
@@ -38,11 +32,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
-        </dependency>
-        <!-- Spring Boot Starter AOP https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-aop -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
         <!-- MyBatis Spring Boot Starter https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
         <dependency>

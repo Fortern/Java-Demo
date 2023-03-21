@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import xyz.fortern.constant.CAMERA_CACHE
 import xyz.fortern.mapper.CameraMapper
-import xyz.fortern.pojo.OnvifCamera
+import xyz.fortern.pojo.Camera
 
 /**
  * 摄像头的增删改查操作
@@ -27,8 +27,8 @@ class CameraService(
 	 * @param id 摄像头的ID
 	 */
 	@Cacheable(key = "#id", unless = "#result == null")
-	fun getCameraById(id: Int): OnvifCamera? {
-		return cameraMapper.getById(id)
+	fun getCameraById(id: Int): Camera? {
+		return cameraMapper.selectById(id)
 	}
 	
 	/**
@@ -47,8 +47,23 @@ class CameraService(
 	 * @param camera 摄像头详情
 	 */
 	@CachePut(key = "#camera.id")
-	fun updateCamera(camera: OnvifCamera) {
+	fun updateCamera(camera: Camera) {
 		cameraMapper.updateById(camera)
+	}
+	
+	/**
+	 * 根据主键，更新一个摄像机的坐标信息
+	 *
+	 * @param id 摄像机的主键
+	 * @param latitude 纬度
+	 * @param longitude 经度
+	 */
+	@CachePut(key = "#id")
+	fun updateCoordinateById(id: Int, latitude: Double, longitude: Double): Camera? {
+		return if (cameraMapper.updateCoordinateById(id, latitude, longitude) > 0)
+			cameraMapper.selectById(id)
+		else
+			null
 	}
 	
 	/**
@@ -57,7 +72,7 @@ class CameraService(
 	 * @param camera 摄像头详情
 	 */
 	@CachePut(key = "#camera.id")
-	fun addNewCamera(camera: OnvifCamera) {
+	fun addNewCamera(camera: Camera) {
 		cameraMapper.insert(camera)
 	}
 	

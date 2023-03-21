@@ -17,7 +17,7 @@ import xyz.fortern.constant.ONVIF_INFO_CACHE
 import xyz.fortern.constant.ONVIF_PROFILE_CACHE
 import xyz.fortern.constant.ONVIF_SNAPSHOT_CACHE
 import xyz.fortern.exception.OnvifResponseTimeoutException
-import xyz.fortern.pojo.OnvifCamera
+import xyz.fortern.pojo.Camera
 import xyz.fortern.pojo.Preset
 import xyz.fortern.pojo.PtzInfo
 import xyz.fortern.util.*
@@ -56,7 +56,7 @@ class OnvifControlService {
 	 * @param camera 摄像头信息
 	 */
 	@Cacheable(cacheNames = [ONVIF_INFO_CACHE], key = "#camera.id")
-	fun getOnvifInfo(@NonNull camera: OnvifCamera): OnvifDeviceInformation {
+	fun getOnvifInfo(@NonNull camera: Camera): OnvifDeviceInformation {
 		var info: OnvifDeviceInformation? = null
 		val lock = MyLock()
 		onvifManager.getDeviceInformation(
@@ -84,7 +84,7 @@ class OnvifControlService {
 	 * @throws OnvifResponseTimeoutException 请求Onvif设备信息超时
 	 */
 	@Cacheable(value = [ONVIF_PROFILE_CACHE], key = "#camera.id")
-	fun getOnvifMediaProfiles(@NonNull camera: OnvifCamera): List<OnvifMediaProfile> {
+	fun getOnvifMediaProfiles(@NonNull camera: Camera): List<OnvifMediaProfile> {
 		var mediaProfiles: List<OnvifMediaProfile>? = null
 		val mLock = MyLock()
 		onvifManager.getMediaProfiles(camera.toDevice()) { _, mediaProfilesReceived ->
@@ -102,7 +102,7 @@ class OnvifControlService {
 	/**
 	 * 获取配置信息
 	 */
-	fun getConfigurationList(@NonNull camera: OnvifCamera): List<OnvifConfiguration> {
+	fun getConfigurationList(@NonNull camera: Camera): List<OnvifConfiguration> {
 		var configurationList: List<OnvifConfiguration>? = null
 		val mLock = MyLock()
 		onvifManager.getConfigurations(
@@ -121,7 +121,7 @@ class OnvifControlService {
 	/**
 	 * 获取配置信息
 	 */
-	fun getService(@NonNull camera: OnvifCamera): OnvifServices {
+	fun getService(@NonNull camera: Camera): OnvifServices {
 		var onvifServices: OnvifServices? = null
 		val mLock = MyLock()
 		onvifManager.getServices(
@@ -144,7 +144,7 @@ class OnvifControlService {
 		value = [ONVIF_SNAPSHOT_CACHE], key = "#camera.id",
 		condition = "@onvifControlService.getOnvifInfo(#camera).manufacturer.equals('HIKVISION')"
 	)
-	fun getSnapshotUri(@NonNull camera: OnvifCamera): String {
+	fun getSnapshotUri(@NonNull camera: Camera): String {
 		var uri: String? = null
 		val lock = MyLock()
 		onvifManager.getSnapshotURI(
@@ -164,7 +164,7 @@ class OnvifControlService {
 	/**
 	 * 抓图
 	 */
-	fun capture(@NonNull camera: OnvifCamera): InputStream? {
+	fun capture(@NonNull camera: Camera): InputStream? {
 		val snapshotUri = onvifControlService.getSnapshotUri(camera)
 		return getResponseWithDigest(
 			snapshotUri,
@@ -176,7 +176,7 @@ class OnvifControlService {
 	/**
 	 * 获取原始的视频链接，并添加身份认证信息
 	 */
-	fun getVideoUri(@NonNull camera: OnvifCamera): String {
+	fun getVideoUri(@NonNull camera: Camera): String {
 		var uri: String? = null
 		val lock = MyLock()
 		onvifManager.getMediaStreamURI(
@@ -208,7 +208,7 @@ class OnvifControlService {
 	 *
 	 * @param camera 摄像头详情
 	 */
-	fun getPresetList(@NonNull camera: OnvifCamera): List<Preset> {
+	fun getPresetList(@NonNull camera: Camera): List<Preset> {
 		var presetList: List<Preset>? = null
 		val lock = MyLock()
 		onvifManager.getPresets(
@@ -234,14 +234,14 @@ class OnvifControlService {
 	 * @param y 转换后的t，范围0~1
 	 * @param z 转换后的zoom，范围0~1
 	 */
-	fun ptzAbsoluteMove(@NonNull camera: OnvifCamera, x: Double, y: Double, z: Double) {
+	fun ptzAbsoluteMove(@NonNull camera: Camera, x: Double, y: Double, z: Double) {
 		onvifManager.absoluteMove(camera.toDevice(), onvifControlService.getOnvifMediaProfiles(camera)[0], x, y, z)
 	}
 	
 	/**
 	 * 获取设备方位角信息（不含视场角）
 	 */
-	fun getPtzInfo(@NonNull camera: OnvifCamera): PtzInfo {
+	fun getPtzInfo(@NonNull camera: Camera): PtzInfo {
 		var onvifStatus: OnvifStatus? = null
 		val lock = MyLock()
 		onvifManager.getStatus(

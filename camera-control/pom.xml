@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>xyz.fortern</groupId>
-        <artifactId>java-test</artifactId>
+        <artifactId>PTZ-Control</artifactId>
         <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
@@ -101,6 +101,11 @@
             <groupId>io.github.rburgst</groupId>
             <artifactId>okhttp-digest</artifactId>
             <scope>runtime</scope>
+        </dependency>
+        <!-- Artemis HTTP Client https://mvnrepository.com/artifact/com.hikvision.ga/artemis-http-client -->
+        <dependency>
+            <groupId>com.hikvision.ga</groupId>
+            <artifactId>artemis-http-client</artifactId>
         </dependency>
     </dependencies>
 

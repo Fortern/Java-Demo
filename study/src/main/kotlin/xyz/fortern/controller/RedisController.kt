@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
-import xyz.fortern.pojo.OnvifCamera
+import xyz.fortern.pojo.Camera
 
 @Controller
 @RequestMapping("/redis")
@@ -31,8 +31,8 @@ class RedisController(
 	
 	@PostMapping("/set-key")
 	fun setKeyValue(key: String): ResponseEntity<*> {
-		val onvifCamera = OnvifCamera(2, "1.1.1.1", 40, "user", "pass")
-		opsForValue.set(key, onvifCamera)
+		val camera = Camera(2, "1.1.1.1", 40, "user", "pass")
+		opsForValue.set(key, camera)
 		return ResponseEntity.ok("ok")
 	}
 	
@@ -45,7 +45,7 @@ class RedisController(
 	
 	@PostMapping("/get-key")
 	fun getKey(key: String): ResponseEntity<*> {
-		val value = opsForValue.get(key) as OnvifCamera
+		val value = opsForValue.get(key) as Camera
 		return ResponseEntity.ok(value)
 	}
 	

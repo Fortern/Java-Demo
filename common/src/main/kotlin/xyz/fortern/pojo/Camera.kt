@@ -2,7 +2,7 @@ package xyz.fortern.pojo
 
 import java.io.Serializable
 
-data class OnvifCamera(
+data class Camera(
 	/**
 	 * id
 	 */
@@ -30,4 +30,20 @@ data class OnvifCamera(
 	 * 预置位列表
 	 */
 	var presetList: List<Preset>? = null
+	
+	/**
+	 * 纬度，范围为[-90,90]。东经为正数，西经为负数。
+	 */
+	var latitude: Double? = null
+	
+	/**
+	 * 经度，范围为(-180,180]。北纬为正数，南纬为负数。
+	 */
+	var longitude: Double? = null
+	
+	/**
+	 * 所属区域ID
+	 */
+	var regionId: Long? = null
+	
 }
