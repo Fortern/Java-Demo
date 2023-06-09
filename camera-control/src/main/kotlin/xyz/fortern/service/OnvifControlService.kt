@@ -142,6 +142,7 @@ class OnvifControlService {
 	 */
 	@Cacheable(
 		value = [ONVIF_SNAPSHOT_CACHE], key = "#camera.id",
+		//只有当manufacturer为HIKVISION是才缓存抓图连接
 		condition = "@onvifControlService.getOnvifInfo(#camera).manufacturer.equals('HIKVISION')"
 	)
 	fun getSnapshotUri(@NonNull camera: Camera): String {

@@ -3,3 +3,8 @@ server:
 spring:
   redis:
     password: Redis20868354
+feign:
+  httpclient:
+    enabled: true # 依赖httpClient才会生效
+    max-connections: 200
+    max-connections-per-route: 50

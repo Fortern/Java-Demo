@@ -1,6 +1,5 @@
 package xyz.fortern.controller
 
-import okio.IOException
 import org.apache.commons.io.IOUtils
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable
@@ -10,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 import xyz.fortern.api.CameraFeign
 import xyz.fortern.pojo.SpringResponse
 import xyz.fortern.service.OnvifControlService
+import java.io.IOException
 import javax.servlet.http.HttpServletResponse
 
 @RestController
@@ -83,7 +83,6 @@ class CameraOperateController(
 	
 	@ResponseBody
 	@PostMapping("/live/{id}")
-	@Throws(IOException::class)
 	fun liveUri(@PathVariable id: Int, response: HttpServletResponse): Any? {
 		val camera = cameraFeign.getById(id) ?: return SpringResponse(HttpStatus.NOT_FOUND.value())
 		return onvifControlService.getVideoUri(camera)
