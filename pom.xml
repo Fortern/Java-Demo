@@ -21,6 +21,7 @@
         <module>camera</module>
         <module>camera-control</module>
         <module>feign-api</module>
+        <module>ptz-dispatch</module>
     </modules>
 
     <properties>
