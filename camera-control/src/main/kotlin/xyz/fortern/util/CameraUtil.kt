@@ -19,16 +19,23 @@ fun OnvifPreset.toPreset(manufacturer: String): Preset {
 	val zoom: Float
 	if (manufacturer == "HIKVISION") {
 		pan = this.pan.toFloat() * 180 + 180
-		tilt = this.tilt.toFloat() * 90
-		zoom = (this.zoom.toFloat() + 1) * 10
+		tilt = this.tilt.toFloat() * 50 - 40
+		zoom = this.zoom.toFloat() * 10
 	} else {
-		pan = this.pan.toFloat()
-		tilt = this.tilt.toFloat()
-		zoom = this.zoom.toFloat()
+		pan = this.pan.toFloat() * 180 + 180
+		tilt = this.tilt.toFloat() * 50 - 40
+		zoom = this.zoom.toFloat() * 10
 	}
 	return Preset(name, token, pan, tilt, zoom)
 }
 
+fun presetToXyz(p: Double, t: Double, z: Double): Array<Double> {
+	return arrayOf((p - 180) / 180, (t + 40) / 50, z / 10)
+}
+
 fun OnvifStatus.toPtzInfo(): PtzInfo {
-	return PtzInfo(this.pan.toFloat(), this.tilt.toFloat(), this.zoom.toFloat())
+	val pan: Float = this.pan.toFloat() * 180 + 180
+	val tilt: Float = this.tilt.toFloat() * 50 - 40
+	val zoom: Float = this.zoom.toFloat() / 10
+	return PtzInfo(pan, tilt, zoom)
 }

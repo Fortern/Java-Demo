@@ -42,11 +42,11 @@ class OnvifControlService {
 	 */
 	private val onvifManager = OnvifManager(object : OnvifResponseListener {
 		override fun onResponse(onvifDevice: OnvifDevice, onvifResponse: OnvifResponse<*>) {
-			logger.info("PTZ response: {}", onvifResponse.xml)
+			logger.info("PTZ response:\n{}", onvifResponse.xml)
 		}
 		
 		override fun onError(onvifDevice: OnvifDevice, errorCode: Int, errorMsg: String) {
-			logger.warn("PTZ response err [{}]: {} ", errorCode, errorMsg)
+			logger.warn("PTZ response err [{}]:\n{} ", errorCode, errorMsg)
 		}
 	})
 	
@@ -229,10 +229,24 @@ class OnvifControlService {
 	}
 	
 	/**
+	 * 转到指定预置位
+	 *
+	 * @param camera 摄像头详情
+	 * @param token  预置位token
+	 */
+	fun gotoPreset(@NonNull camera: Camera, token: String) {
+		onvifManager.gotoPreset(
+			camera.toDevice(),
+			onvifControlService.getOnvifMediaProfiles(camera)[0],
+			OnvifPreset(token, null)
+		)
+	}
+	
+	/**
 	 * Onvif设备绝对移动（转动到指定的坐标）
 	 *
-	 * @param x 转换后的p，范围0~1
-	 * @param y 转换后的t，范围0~1
+	 * @param x 转换后的p，范围-1~1
+	 * @param y 转换后的t，范围-1~1
 	 * @param z 转换后的zoom，范围0~1
 	 */
 	fun ptzAbsoluteMove(@NonNull camera: Camera, x: Double, y: Double, z: Double) {
