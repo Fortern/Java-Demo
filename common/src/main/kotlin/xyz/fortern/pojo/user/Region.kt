@@ -1,4 +1,4 @@
-package xyz.fortern.pojo
+package xyz.fortern.pojo.user
 
 import java.lang.Long.numberOfTrailingZeros
 

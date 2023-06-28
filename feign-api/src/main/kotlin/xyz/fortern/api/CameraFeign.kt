@@ -5,7 +5,7 @@ import org.springframework.cloud.openfeign.FeignClient
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import xyz.fortern.constant.CAMERA_CACHE
-import xyz.fortern.pojo.Camera
+import xyz.fortern.pojo.camera.Camera
 
 /**
  * 通用的Camera模块API接口

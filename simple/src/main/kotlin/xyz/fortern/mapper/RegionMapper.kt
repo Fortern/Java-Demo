@@ -2,7 +2,7 @@ package xyz.fortern.mapper
 
 import org.apache.ibatis.annotations.*
 import org.springframework.stereotype.Repository
-import xyz.fortern.pojo.Region
+import xyz.fortern.pojo.user.Region
 
 @Repository
 interface RegionMapper {

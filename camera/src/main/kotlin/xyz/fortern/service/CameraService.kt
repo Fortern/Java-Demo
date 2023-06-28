@@ -9,7 +9,7 @@ import org.springframework.cache.annotation.Cacheable
 import org.springframework.stereotype.Service
 import xyz.fortern.constant.CAMERA_CACHE
 import xyz.fortern.mapper.CameraMapper
-import xyz.fortern.pojo.Camera
+import xyz.fortern.pojo.camera.Camera
 
 /**
  * 摄像头的增删改查操作

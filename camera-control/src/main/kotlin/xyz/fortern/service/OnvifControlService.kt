@@ -17,9 +17,9 @@ import xyz.fortern.constant.ONVIF_INFO_CACHE
 import xyz.fortern.constant.ONVIF_PROFILE_CACHE
 import xyz.fortern.constant.ONVIF_SNAPSHOT_CACHE
 import xyz.fortern.exception.OnvifResponseTimeoutException
-import xyz.fortern.pojo.Camera
-import xyz.fortern.pojo.Preset
-import xyz.fortern.pojo.PtzInfo
+import xyz.fortern.pojo.camera.Camera
+import xyz.fortern.pojo.camera.Preset
+import xyz.fortern.pojo.camera.PtzInfo
 import xyz.fortern.util.*
 import java.io.InputStream
 import java.net.URLEncoder

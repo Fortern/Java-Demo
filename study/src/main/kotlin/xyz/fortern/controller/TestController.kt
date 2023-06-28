@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
-import xyz.fortern.pojo.User
+import xyz.fortern.pojo.user.User
 import javax.servlet.http.HttpServletRequest
 
 @RestController

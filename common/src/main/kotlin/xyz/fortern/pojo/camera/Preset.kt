@@ -1,4 +1,4 @@
-package xyz.fortern.pojo
+package xyz.fortern.pojo.camera
 
 /**
  * 预置位

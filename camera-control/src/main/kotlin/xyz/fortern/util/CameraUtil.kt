@@ -3,9 +3,9 @@ package xyz.fortern.util
 import be.teletask.onvif.models.OnvifDevice
 import be.teletask.onvif.models.OnvifPreset
 import be.teletask.onvif.models.OnvifStatus
-import xyz.fortern.pojo.Camera
-import xyz.fortern.pojo.Preset
-import xyz.fortern.pojo.PtzInfo
+import xyz.fortern.pojo.camera.Camera
+import xyz.fortern.pojo.camera.Preset
+import xyz.fortern.pojo.camera.PtzInfo
 
 fun Camera.toDevice(): OnvifDevice {
 	return OnvifDevice(this.ip + ":" + this.port, this.username, this.password)

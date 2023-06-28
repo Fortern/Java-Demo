@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import xyz.fortern.constant.REGION_CACHE
 import xyz.fortern.mapper.RegionMapper
-import xyz.fortern.pojo.Region
+import xyz.fortern.pojo.user.Region
 
 @Service
 @CacheConfig(cacheNames = [REGION_CACHE])

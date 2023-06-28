@@ -1,4 +1,4 @@
-package xyz.fortern.pojo
+package xyz.fortern.pojo.camera
 
 import java.io.Serializable
 

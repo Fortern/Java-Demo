@@ -4,8 +4,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RestController
-import xyz.fortern.pojo.Camera
 import xyz.fortern.pojo.SpringResponse
+import xyz.fortern.pojo.camera.Camera
 import xyz.fortern.service.CameraService
 
 @RestController

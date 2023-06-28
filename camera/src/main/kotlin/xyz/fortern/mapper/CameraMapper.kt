@@ -3,7 +3,7 @@ package xyz.fortern.mapper
 import org.apache.ibatis.annotations.*
 import org.apache.ibatis.type.JdbcType
 import org.springframework.stereotype.Repository
-import xyz.fortern.pojo.Camera
+import xyz.fortern.pojo.camera.Camera
 
 @Repository
 interface CameraMapper {

@@ -1,4 +1,4 @@
-package xyz.fortern.pojo
+package xyz.fortern.pojo.camera
 
 /**
  * 方位角与视场角信息。
