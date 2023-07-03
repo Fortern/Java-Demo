@@ -1,5 +1,6 @@
 package xyz.fortern.pojo.user
 
+import java.lang.Long.numberOfLeadingZeros
 import java.lang.Long.numberOfTrailingZeros
 
 /**
@@ -29,6 +30,11 @@ data class Region(
 	var code: String? = null
 	
 	/**
+	 * 区域内部的排序
+	 */
+	var sort: Int = 0;
+	
+	/**
 	 * 该组织节点的等级，越小表示范围越大。
 	 *
 	 * @return
@@ -45,7 +51,12 @@ data class Region(
 	fun isInside(region: Long): Boolean {
 		val a = region shl 4
 		val b = this.id shl 4
-		val c = numberOfTrailingZeros(a xor b)
+		//c 为 a,b 的共同前缀长度
+		var c = numberOfLeadingZeros(a xor b)
+		// 如果 c<12 第一级别就不同，不可能是子区域
+		if (c < 12) return false
+		//c 为 a,b 的共同区域前缀的长度，是12的倍数
+		c -= c % 12
 		return a shl c == 0L && b shl c != 0L
 	}
 }
