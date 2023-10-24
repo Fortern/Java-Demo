@@ -32,31 +32,48 @@ data class Region(
 	/**
 	 * 区域内部的排序
 	 */
-	var sort: Int = 0;
+	var sort: Int = 0
 	
 	/**
 	 * 该组织节点的等级，越小表示范围越大。
 	 *
-	 * @return
+	 * @return 该组织节点的等级，范围1~5
 	 */
-	fun level(): Int {
-		return numberOfTrailingZeros(this.id shl 4) / 12 + 1
+	fun level(): Int = level(this.id)
+	
+	companion object {
+		/**
+		 * 判断区域a是否为区域b的子区域
+		 *
+		 * @param i 区域a的id
+		 * @param o 区域b的id
+		 * @return true如果i是o的子区域，false如果i不是o的子区域
+		 */
+		fun inside(i: Long, o: Long): Boolean {
+			val a = i shl 4
+			val b = o shl 4
+			//c 为 a,b 的共同前缀长度
+			var c = numberOfLeadingZeros(a xor b)
+			// 如果 c<12 第一级别就不同，不可能是子区域
+			if (c < 12) return false
+			//c 为 a,b 的共同区域前缀的长度，是12的倍数
+			c -= c % 12
+			return a shl c != 0L && b shl c == 0L
+		}
+		
+		/**
+		 * 一个区域ID的等级，越小表示范围越大。
+		 *
+		 * @return 该组织节点的等级，范围1~5
+		 */
+		fun level(id: Long): Int = 5 - numberOfTrailingZeros(id) / 12
 	}
 	
 	/**
 	 * 判断这个区域是否是所给区域的子区域
 	 *
 	 * @param region 用于判断的组织区域的id
+	 * @return true如果region是这个区域的子区域，false如果region不是这个区域的子区域
 	 */
-	fun isInside(region: Long): Boolean {
-		val a = region shl 4
-		val b = this.id shl 4
-		//c 为 a,b 的共同前缀长度
-		var c = numberOfLeadingZeros(a xor b)
-		// 如果 c<12 第一级别就不同，不可能是子区域
-		if (c < 12) return false
-		//c 为 a,b 的共同区域前缀的长度，是12的倍数
-		c -= c % 12
-		return a shl c == 0L && b shl c != 0L
-	}
+	fun isInside(region: Long): Boolean = inside(region, this.id)
 }

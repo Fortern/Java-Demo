@@ -8,14 +8,15 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
 import xyz.fortern.pojo.user.User
+import java.util.*
 
 @Component
 class CustomAuthProvider : AuthenticationProvider {
 	private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 	
 	private val userMap = mapOf(
-		Pair(0, User(0, "Fortern", "123456", null, listOf("common"))),
-		Pair(1, User(1, "Maxin", "123456", null, listOf("normal")))
+		Pair(0, User(0, "Fortern", "123456", null, Collections.emptyList(), 0, null, 1)),
+		Pair(1, User(1, "Maxin", "123456", null, Collections.emptyList(), 0, null, 1))
 	)
 	
 	override fun authenticate(authentication: Authentication): Authentication? {
