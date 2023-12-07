@@ -71,7 +71,7 @@ interface CameraMapper {
 	/**
 	 * 将某区域下的摄像机的区域信息清除。
 	 */
-	@Update("update set region_id = null where region_id=#{regionId}")
+	@Update("update camera set region_id = null where region_id=#{regionId}")
 	fun removeRegionInfo(regionId: Long): Int
 	
 }

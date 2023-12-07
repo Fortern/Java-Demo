@@ -38,4 +38,13 @@ open class RedisConfig {
 		return template
 	}
 	
+	//连接到Redis哨兵集群的配置
+//	@Bean
+//	open fun clientConfigurationBuilderCustomizer(): LettuceClientConfigurationBuilderCustomizer {
+//		return LettuceClientConfigurationBuilderCustomizer { clientConfigurationBuilder: LettuceClientConfigurationBuilder ->
+//			clientConfigurationBuilder.readFrom(
+//				ReadFrom.REPLICA_PREFERRED
+//			)
+//		}
+//	}
 }

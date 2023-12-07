@@ -5,10 +5,38 @@ spring:
   #store-type: redis
   #timeout: 3600
   redis:
-    host: localhost
-    port: 6379
-    database: 0
     password: Redis20868354
+    #    # 哨兵集群配置
+    #    sentinel:
+    #      master: mymaster
+    #      nodes:
+    #        - 192.168.5.106:26379
+    #        - 192.168.5.106:26380
+    #        - 192.168.5.106:26381
+    # 连接池配置
+    lettuce:
+      pool:
+        enabled: true
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+      cluster:
+        refresh:
+          # 自适应拓扑刷新
+          adaptive: true
+          # 定时刷新
+          period: 2s
+    # cluster集群配置
+    cluster:
+      max-redirects: 3
+      nodes:
+        - 192.168.5.106:6379
+        - 192.168.5.106:6380
+        - 192.168.5.106:6381
+        - 192.168.5.106:6382
+        - 192.168.5.106:6383
+        - 192.168.5.106:6384
   datasource:
     url: jdbc:mysql://localhost:3306/test?serverTimezone=GMT%2B8&characterEncoding=utf-8
     driver-class-name: com.mysql.cj.jdbc.Driver
