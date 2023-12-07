@@ -12,9 +12,6 @@
     <version>1.0.0</version>
     <name>camera</name>
     <description>对摄像头的数据库操作</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
     <dependencies>
         <!-- common -->
         <dependency>

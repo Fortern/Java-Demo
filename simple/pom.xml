@@ -12,9 +12,6 @@
     <version>1.0.0</version>
     <name>simple</name>
     <description>一些简单数据的接口</description>
-    <properties>
-        <java.version>17</java.version>
-    </properties>
     <dependencies>
         <!-- common -->
         <dependency>

@@ -20,6 +20,7 @@ open class SecurityConfig {
 			.antMatchers("/file/**").permitAll()
 			.antMatchers("/**.html").permitAll()
 			.antMatchers("/security/login").permitAll()
+			.antMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 			.anyRequest().authenticated()
 		http.formLogin()
 		//禁用requestCache，避免生成记录上次请求的Session，或者使用requestCache(new NullRequestCache())

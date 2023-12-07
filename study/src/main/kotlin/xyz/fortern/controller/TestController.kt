@@ -1,6 +1,7 @@
 package xyz.fortern.controller
 
 import com.alibaba.fastjson.JSON
+import io.swagger.v3.oas.annotations.Operation
 import org.slf4j.LoggerFactory
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.http.ResponseEntity
@@ -100,6 +101,7 @@ class TestController(
 	/**
 	 * 测试SessionId
 	 */
+	@Operation(summary = "sessionId测试", description = "在日志中输出SessionId")
 	@PostMapping("/session")
 	fun sessionTest2(request: HttpServletRequest): ResponseEntity<String> {
 		val session = request.session
