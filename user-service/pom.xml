@@ -49,6 +49,11 @@
             <groupId>org.mybatis.spring.boot</groupId>
             <artifactId>mybatis-spring-boot-starter</artifactId>
         </dependency>
+        <!-- Spring Boot Starter Data Redis https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-redis -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
         <!-- Spring Cloud Starter Bootstrap https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap -->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

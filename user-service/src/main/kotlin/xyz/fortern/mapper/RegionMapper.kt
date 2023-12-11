@@ -3,6 +3,9 @@ package xyz.fortern.mapper
 import org.apache.ibatis.annotations.Delete
 import org.apache.ibatis.annotations.Insert
 import org.apache.ibatis.annotations.Param
+import org.apache.ibatis.annotations.Result
+import org.apache.ibatis.annotations.ResultMap
+import org.apache.ibatis.annotations.Results
 import org.apache.ibatis.annotations.Select
 import xyz.fortern.pojo.user.Region
 
@@ -10,6 +13,16 @@ import xyz.fortern.pojo.user.Region
  * 区域信息 数据库操作
  */
 interface RegionMapper {
+
+	@Results(id = "map", value = [
+		Result(column = "id", property = "id"),
+		Result(column = "name", property = "name"),
+		Result(column = "sort", property = "sort"),
+		Result(column = "code", property = "code"),
+	])
+	@Select("select id, name, sort, code from region where id = #{id};")
+	fun selectById(id: Int): Region
+	
 	/**
 	 * 插入新的区域记录
 	 */
@@ -22,6 +35,7 @@ interface RegionMapper {
 	/**
 	 * 获取一个区域的子区域
 	 */
+	@ResultMap("map")
 	@Select("select id, name, sort, code from region where parent = #{parentId}")
 	fun selectChildren(parentId: Long): List<Region>
 	

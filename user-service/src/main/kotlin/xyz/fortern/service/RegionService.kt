@@ -1,7 +1,11 @@
-package xyz.fortern
+package xyz.fortern.service
 
+import org.springframework.cache.annotation.CacheConfig
+import org.springframework.cache.annotation.Cacheable
+import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Isolation
 import org.springframework.transaction.annotation.Transactional
+import xyz.fortern.constant.REGION_CACHE
 import xyz.fortern.mapper.RegionMapper
 import xyz.fortern.pojo.user.Region
 import java.lang.Long.numberOfTrailingZeros
@@ -10,9 +14,19 @@ import java.util.*
 /**
  * Region - service
  */
-open class RegionService(
+@Service
+@CacheConfig(cacheNames = [REGION_CACHE])
+class RegionService(
 	private val regionMapper: RegionMapper
 ) {
+	/**
+	 * 根据ID获取Region
+	 */
+	@Cacheable(key = "#id", sync = true)
+	fun getById(id: Int): Region {
+		return regionMapper.selectById(id)
+	}
+	
 	/**
 	 * 获取某一区域下的直接子区域列表
 	 *

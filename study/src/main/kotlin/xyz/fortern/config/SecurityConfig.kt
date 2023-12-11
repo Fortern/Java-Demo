@@ -10,7 +10,7 @@ import org.springframework.security.web.SecurityFilterChain
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
-open class SecurityConfig {
+class SecurityConfig {
 	@Bean
 	open fun filterChain(http: HttpSecurity): SecurityFilterChain {
 		http.csrf().disable()
