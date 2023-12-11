@@ -4,6 +4,10 @@ spring:
   #session:
   #store-type: redis
   #timeout: 3600
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017
+      database: local
   redis:
     password: Redis20868354
     #    # 哨兵集群配置

@@ -15,7 +15,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>common</module>
-        <module>simple</module>
         <module>study</module>
         <module>gateway</module>
         <module>camera</module>
@@ -58,6 +57,12 @@
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${boot.version}</version>
+            </dependency>
+            <!-- MongoDB https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-mongodb -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-mongodb</artifactId>
                 <version>${boot.version}</version>
             </dependency>
             <!-- MyBatis https://mvnrepository.com/artifact/org.mybatis.spring.boot/mybatis-spring-boot-starter -->
